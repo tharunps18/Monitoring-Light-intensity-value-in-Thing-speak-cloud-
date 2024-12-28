@@ -93,100 +93,61 @@ Prototype and build IoT systems without setting up servers or developing web sof
 
  
 # PROGRAM:
-
- #include"ThingSpeak.h"
- 
 #include <WiFi.h>
+#include "ThingSpeak.h"
+#define ldr_pin 34
+
+char ssid[] = "tharunps"; 
+char pass[] = "tharun#123";
+int keyIndex = 0;
+WiFiClient  client;
+
+unsigned long myChannelNumber =  2788340;
+const int ChannelField = 1;
+const char * myWriteAPIKey = "Y2YROF4BS19UCV3I";
+
+int ldrValue = 0;
+int lightPercentage = 0;
+
+const int darkValue = 4095;
+const int brightValue = 0;  
 
 
-char ssid[]="tharunps";
-
-char pass[]="tharun#123";
-
-
-const int LDR_PIN=34;
-
-//#define LDR_PIN 34
-
-WiFiClient client;
-
-unsigned long myChannelField = 2754605;
-
-const int ChannelField1 = 1 ; 
-
-const char *myWriteAPIKey="3A29NBTX5HQIRDR6";   
-
-void setup()
-
+void setup() 
 {
-
-
-  // Initialize serial communication at 115200 baud rate
-  
   Serial.begin(115200);
-
-  pinMode (LDR_PIN,OUTPUT);
-  
-  WiFi.mode(WIFI_STA);
-  
+  pinMode(ldr_pin, INPUT);
+  WiFi.mode(WIFI_STA);   
   ThingSpeak.begin(client);
-
-  
-  
-  Serial.println("LDR Sensor with ESP32 WROOM");
-  
-  delay(1000);
 }
 
-
-void loop()
-
+void loop() 
 {
-
-  if(WiFi.status()!=WL_CONNECTED)
-  
-  {
-  
-    Serial.print("Attempting to connet to SSID: "); 
-    
-    Serial.println(ssid);
+  if(WiFi.status() != WL_CONNECTED)
+{
+    Serial.print("Attempting to connect to SSID: ");
     
     while(WiFi.status() != WL_CONNECTED)
-    
     {
-    
-      WiFi.begin(ssid, pass);
-      
+      WiFi.begin(ssid, pass); 
       Serial.print(".");
-      
-      delay(5000);
-    }
-    
-    
-    Serial.println("\nConnected");
+      delay(5000);     
+    } 
+    Serial.println("\nConnected.");
   }
-  
-  
-  // Read the value from the LDR
-  
-  int ldrValue = analogRead(LDR_PIN);
 
+  int ldrValue= analogRead(ldr_pin);  
+  
+  lightPercentage = map(ldrValue, darkValue, brightValue, 0, 100);
 
-
-  // Print the LDR value to the Serial Monitor
+  lightPercentage = constrain(lightPercentage, 0, 100);
+  Serial.println("Intensity=");
+  Serial.println(lightPercentage);    
+  Serial.println("%");
   
-  Serial.print("LDR Value: ");
-  
-  Serial.println(ldrValue);
-  
-  ThingSpeak.writeField(myChannelField,ChannelField1,ldrValue, myWriteAPIKey);
-  
-  // Optional: Add a delay for a more stable output
-  
-  delay(1000); // 1-second delay between readings
+  ThingSpeak.writeField(myChannelNumber, ChannelField, lightPercentage, myWriteAPIKey);
+  delay(5000); 
 }
-
-
 # CIRCUIT DIAGRAM:
 ![image](https://github.com/user-attachments/assets/f4cccd3d-2aee-43a1-9a68-400194a68272)
 
