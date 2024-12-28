@@ -1,7 +1,7 @@
-**NAME: THARUN P S
+# NAME: THARUN P S
 
-REF NO: 24900117**
-# Monitoring-Light-intensity-value-in-Thing-speak-cloud
+# REF NO: 24900117
+# EX.4: Monitoring-Light-intensity-value-in-Thing-speak-cloud
 # Uploading LDR sensor data in Thing Speak cloud
 
 # AIM:
@@ -93,12 +93,13 @@ Prototype and build IoT systems without setting up servers or developing web sof
 
  
 # PROGRAM:
+~~~
 #include <WiFi.h>
 #include "ThingSpeak.h"
 #define ldr_pin 34
 
-char ssid[] = "Akshay"; 
-char pass[] = "Loid D Ackerman :)";
+char ssid[] = "tharunps"; 
+char pass[] = "tharun#123";
 int keyIndex = 0;
 WiFiClient  client;
 
@@ -148,6 +149,7 @@ void loop()
   ThingSpeak.writeField(myChannelNumber, ChannelField, lightPercentage, myWriteAPIKey);
   delay(5000); 
 }
+~~~
 # CIRCUIT DIAGRAM:
 ![image](https://github.com/user-attachments/assets/f4cccd3d-2aee-43a1-9a68-400194a68272)
 
